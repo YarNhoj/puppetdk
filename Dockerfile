@@ -10,12 +10,18 @@ MAINTAINER John R. Ray <john@johnray.io>
 COPY vimrc.local /home/dev/.vimrc.local
 RUN chown dev:dev /home/dev/.vimrc.local
 
-# Install Puppet
-COPY puppet-agent_1.4.1-1jessie_amd64.deb /tmp/puppet-agent_1.4.1-1jessie_amd64.deb
-RUN dpkg -i /tmp/puppet-agent_1.4.1-1jessie_amd64.deb && rm /tmp/puppet-agent_1.4.1-1jessie_amd64.deb
+# Install Puppet Agent
+#COPY puppet-agent_1.4.1-1jessie_amd64.deb /tmp/puppet-agent_1.4.1-1jessie_amd64.deb
+#RUN dpkg -i /tmp/puppet-agent_1.4.1-1jessie_amd64.deb && rm /tmp/puppet-agent_1.4.1-1jessie_amd64.deb
+RUN wget https://apt.puppetlabs.com/puppet5-release-jessie.deb && dpkg -i puppet5-release-jessie.deb && apt-get update && apt-get install -y puppet-agent
+
+# Install Puppet Development Kit
+COPY pdk_1.0.1.0-1trusty_amd64.deb /tmp/pdk_1.0.1.0-1trusty_amd64.deb
+RUN dpkg -i /tmp/pdk_1.0.1.0-1trusty_amd64.deb && rm /tmp/pdk_1.0.1.0-1trusty_amd64.deb
 
 # Install Hiera_Explain
-RUN /opt/puppetlabs/puppet/bin/gem install hiera_explain puppet-lint --no-rdoc --no-ri
+# TODO Figure out how to install this alongside puppet
+# RUN /opt/puppetlabs/puppet/bin/gem install hiera_explain puppet-lint --no-rdoc --no-ri
 
 # Stop being root
 USER dev
